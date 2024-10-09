@@ -10,16 +10,19 @@ import java.util.List;
  * @author EASV
  */
 public class GameBoard implements IGameBoard {
-    List<Player> players = Arrays.asList(new Player(1, "X"), new Player(2, "O"));
+    List<Player> players = Arrays.asList(new Player(0, "X"), new Player(1, "O"));
     Player currentPlayer = players.get(0);
+    Player previousPlayer = players.get(1);
     public int turn = 0;
 
     public void switchPlayer() {
         if (turn % 2 == 0) {
-            currentPlayer = players.get(0); //player 1
+            currentPlayer = players.get(0);
+            previousPlayer = players.get(1);//player 1
             System.out.println("Switched to player 1:");
         } else {
-            currentPlayer = players.get(1); // player 2
+            currentPlayer = players.get(1);
+            previousPlayer = players.get(0);// player 2
             System.out.println("Switched to player 2:");
         }
     }
@@ -49,7 +52,7 @@ public class GameBoard implements IGameBoard {
 
     @Override
     public int getNextPlayer() {
-        return 0;
+        return currentPlayer.getPlayerNumber();
     }
 
     public boolean play(int col, int row) {
@@ -101,19 +104,19 @@ public class GameBoard implements IGameBoard {
 
         for (int row = 0; row < boardHeight; row++) {
             if (board[row][0] != null && board[row][0] == board[row][1] && board[row][1] == board[row][2]) {
-                return currentPlayer.getPlayerNumber();
+                return previousPlayer.getPlayerNumber();
             }
         }
         for (int col = 0; col < boardWidth; col++) {
             if (board[0][col] != null && board[0][col] == board[1][col] && board[1][col] == board[2][col]) {
-                return currentPlayer.getPlayerNumber();
+                return previousPlayer.getPlayerNumber();
             }
         }
         if (board[0][0] != null && board[0][0] == board[1][1] && board[1][1] == board[2][2]) {
-            return currentPlayer.getPlayerNumber();
+            return previousPlayer.getPlayerNumber();
         }
         if (board[0][2] != null && board[0][2] == board[1][1] && board[1][1] == board[2][2]) {
-            return currentPlayer.getPlayerNumber();
+            return previousPlayer.getPlayerNumber();
         }
         for (int row = 0; row < boardHeight; row++) {
             for (int col = 0; col < boardWidth; col++) {
@@ -152,5 +155,7 @@ public class GameBoard implements IGameBoard {
             }
         }
         currentPlayer = players.get(0);
+        previousPlayer = players.get(1);
+        turn = 0;
     }
 }
