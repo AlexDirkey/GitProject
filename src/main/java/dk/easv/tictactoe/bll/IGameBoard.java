@@ -14,6 +14,7 @@ public interface IGameBoard
      * @return int Id of the next player.
      */
     int getNextPlayer();
+    int getPlayerDisplay();
 
     /**
      * Attempts to let the current player play at the given coordinates. If the
@@ -46,4 +47,8 @@ public interface IGameBoard
      * Resets the game to a new game state.
      */
     void newGame();
+
+    String[][] getBoard();
+
+    boolean isDraw(String[][] board);
 }

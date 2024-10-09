@@ -10,10 +10,13 @@ import java.util.List;
  * @author EASV
  */
 public class GameBoard implements IGameBoard {
-    List<Player> players = Arrays.asList(new Player(0, "X"), new Player(1, "O"));
+    List<Player> players = Arrays.asList(new Player(0,1, "X"), new Player(1,2, "O"));
     Player currentPlayer = players.get(0);
     Player previousPlayer = players.get(1);
     public int turn = 0;
+    public int boardWidth = 3;
+    public int boardHeight = 3;
+    private final String[][] board = new String[boardWidth][boardHeight];
 
     public void switchPlayer() {
         if (turn % 2 == 0) {
@@ -27,38 +30,31 @@ public class GameBoard implements IGameBoard {
         }
     }
 
+    public boolean isDraw(String[][] board) {
+        for(int i = 0; i < boardWidth; i++) {
+            for(int j = 0; j < boardHeight; j++) {
+                if (board[i][j] == "") {
+                    return false;
+                }
+            }
+        }
+        if(turn >=9 )
+            return true;
 
-    /**
-     * Returns 0 for player 0, 1 for player 1.
-     *
-     * @return int Id of the next player.
-     */
-
-
-    /**
-     * Attempts to let the current player play at the given coordinates. It the
-     * attempt is succesfull the current player has ended his turn and it is the
-     * next players turn.
-     *
-     * @param col column to place a marker in.
-     * @param row row to place a marker in.
-     * @return true if the move is accepted, otherwise false. If gameOver == true
-     * this method will always return false.
-     */
-
-    public int boardWidth = 3;
-    public int boardHeight = 3;
-    private final String[][] board = new String[boardWidth][boardHeight];
+        return false;
+    }
 
     @Override
     public int getNextPlayer() {
         return currentPlayer.getPlayerNumber();
     }
 
+    @Override
+    public int getPlayerDisplay() {
+        return currentPlayer.getPlayerDisplayNumber();
+    }
+
     public boolean play(int col, int row) {
-        if (isGameOver()) {
-            return false;
-        }
         if (col < 0 || col >= boardWidth || row < 0 || row >= boardHeight) {
             return false;
         }
@@ -96,6 +92,9 @@ public class GameBoard implements IGameBoard {
      * @return true if the game is over, else it will retun false.
      */
     public boolean isGameOver() {
+        if(isDraw(board)) {
+            return getWinner() == -1;
+        }
         return getWinner() != -1;
     }
 
@@ -115,6 +114,9 @@ public class GameBoard implements IGameBoard {
         if (board[0][0] != null && board[0][0] == board[1][1] && board[1][1] == board[2][2]) {
             return previousPlayer.getPlayerNumber();
         }
+        if(board[2][0] != null && board[2][0] == board[1][1] && board[1][1] == board[0][2]) {
+            return previousPlayer.getPlayerNumber();
+        }
         if (board[0][2] != null && board[0][2] == board[1][1] && board[1][1] == board[2][2]) {
             return previousPlayer.getPlayerNumber();
         }
@@ -128,23 +130,10 @@ public class GameBoard implements IGameBoard {
         return -1;
     }
 
-    /**
-     * Gets the id of the winner, -1 if its a draw.
-     *
-     * @return int id of winner, or -1 if draw.
-     */
-    /*
-    public static int getWinner() //there can only be one
 
-    {
-        //TODO Implement this method
-        return -1;
-    }
-*/
-
-    /**
-     * Resets the game to a new game state.
-     */
+        /**
+         * Resets the game to a new game state.
+         */
     public void newGame() {
 
         //private char[][] board = new char[3][3];
@@ -157,5 +146,10 @@ public class GameBoard implements IGameBoard {
         currentPlayer = players.get(0);
         previousPlayer = players.get(1);
         turn = 0;
+    }
+
+    @Override
+    public String[][] getBoard() {
+        return board;
     }
 }
