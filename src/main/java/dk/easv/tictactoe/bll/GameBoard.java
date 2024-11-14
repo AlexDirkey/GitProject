@@ -14,7 +14,7 @@ public class GameBoard implements IGameBoard {
     Player currentPlayer = players.get(0);
     Player previousPlayer = players.get(1);
     public int turn = 0;
-    public int boardWidth = 4;
+    public int boardWidth = 5;
     public int boardHeight = 4;
     private final String[][] board = new String[boardWidth][boardHeight];
 
